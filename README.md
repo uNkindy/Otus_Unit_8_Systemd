@@ -49,5 +49,63 @@ ____
 #### 3. Дополнить юнит-файл apache httpd возможностью запустить несколько инстансов сервера с разными конфигами.
 * Внесем правки в инит файл[/usr/lib/systemd/system/httpd.service](https://github.com/uNkindy/Otus_Unit_8_Systemd/blob/main/httpd.service);
 * В файлах окружения [httpd-first](https://github.com/uNkindy/Otus_Unit_8_Systemd/blob/main/httpd-first), [httpd-second](https://github.com/uNkindy/Otus_Unit_8_Systemd/blob/main/httpd-second) задаем опции для запуска веб-сервера необходимыми конфигурационными файлами;
-* В директории с конфигурационными файлами httpd создаем два конфигурационных файла [first.conf](https://github.com/uNkindy/Otus_Unit_8_Systemd/blob/main/first.conf), [second.conf](https://github.com/uNkindy/Otus_Unit_8_Systemd/blob/main/second.conf);
-* 
+* В директории с конфигурационными файлами httpd создаем два конфигурационных файла [first.conf](https://github.com/uNkindy/Otus_Unit_8_Systemd/blob/main/first.conf), [second.conf](https://github.com/uNkindy/Otus_Unit_8_Systemd/blob/main/second.conf) с необходимыми изменениями для успешного запуска двух процессов;
+* Запустил процессы и убедился, что каждый экземпляр слушает свой порт (80 и 8080 соответственно):
+```console
+[root@otus-home-work /]# systemctl start httpd@first
+[root@otus-home-work /]# systemctl start httpd@second
+● httpd@first.service - The Apache HTTP Server
+   Loaded: loaded (/usr/lib/systemd/system/httpd@.service; disabled; vendor preset: disabled)
+   Active: active (running) since Mon 2022-09-12 10:55:07 UTC; 2h 6min ago
+     Docs: man:httpd@.service(8)
+  Process: 3702 ExecStartPre=/bin/chown root.apache /run/httpd/instance-first (code=exited, status=0/SUCCESS)
+  Process: 3701 ExecStartPre=/bin/mkdir -m 710 -p /run/httpd/instance-first (code=exited, status=0/SUCCESS)
+ Main PID: 3704 (httpd)
+   Status: "Running, listening on: port 80"
+    Tasks: 214 (limit: 5952)
+   Memory: 27.5M
+   CGroup: /system.slice/system-httpd.slice/httpd@first.service
+           ├─3704 /usr/sbin/httpd -DFOREGROUND -f conf/first.conf
+           ├─3706 /usr/sbin/httpd -DFOREGROUND -f conf/first.conf
+           ├─3707 /usr/sbin/httpd -DFOREGROUND -f conf/first.conf
+           ├─3708 /usr/sbin/httpd -DFOREGROUND -f conf/first.conf
+           ├─3709 /usr/sbin/httpd -DFOREGROUND -f conf/first.conf
+           └─3710 /usr/sbin/httpd -DFOREGROUND -f conf/first.conf
+
+Sep 12 10:55:07 otus-home-work systemd[1]: Starting The Apache HTTP Server...
+Sep 12 10:55:07 otus-home-work httpd[3704]: AH00558: httpd: Could not reliably determine the server's fully qualified domain name, using 127.0.1.1. Set the 'ServerName' directive globally to suppress this>
+Sep 12 10:55:07 otus-home-work systemd[1]: Started The Apache HTTP Server.
+Sep 12 10:55:07 otus-home-work httpd[3704]: Server configured, listening on: port 80
+[root@otus-home-work /]#
+[root@otus-home-work /]# systemctl status httpd@second
+● httpd@second.service - The Apache HTTP Server
+   Loaded: loaded (/usr/lib/systemd/system/httpd@.service; disabled; vendor preset: disabled)
+   Active: active (running) since Mon 2022-09-12 10:55:01 UTC; 2h 7min ago
+     Docs: man:httpd@.service(8)
+  Process: 3479 ExecStartPre=/bin/chown root.apache /run/httpd/instance-second (code=exited, status=0/SUCCESS)
+  Process: 3478 ExecStartPre=/bin/mkdir -m 710 -p /run/httpd/instance-second (code=exited, status=0/SUCCESS)
+ Main PID: 3481 (httpd)
+   Status: "Running, listening on: port 8080"
+    Tasks: 214 (limit: 5952)
+   Memory: 28.2M
+   CGroup: /system.slice/system-httpd.slice/httpd@second.service
+           ├─3481 /usr/sbin/httpd -DFOREGROUND -f conf/second.conf
+           ├─3483 /usr/sbin/httpd -DFOREGROUND -f conf/second.conf
+           ├─3484 /usr/sbin/httpd -DFOREGROUND -f conf/second.conf
+           ├─3485 /usr/sbin/httpd -DFOREGROUND -f conf/second.conf
+           ├─3486 /usr/sbin/httpd -DFOREGROUND -f conf/second.conf
+           └─3487 /usr/sbin/httpd -DFOREGROUND -f conf/second.conf
+
+Sep 12 10:55:01 otus-home-work systemd[1]: Starting The Apache HTTP Server...
+Sep 12 10:55:01 otus-home-work httpd[3481]: AH00558: httpd: Could not reliably determine the server's fully qualified domain name, using 127.0.1.1. Set the 'ServerName' directive globally to suppress this>
+Sep 12 10:55:01 otus-home-work systemd[1]: Started The Apache HTTP Server.
+Sep 12 10:55:01 otus-home-work httpd[3481]: Server configured, listening on: port 8080
+[root@otus-home-work /]#
+[root@otus-home-work /]#
+[root@otus-home-work /]#ss -tnulp | grep httpd
+tcp   LISTEN 0      128                *:80              *:*    users:(("httpd",pid=3710,fd=4),("httpd",pid=3709,fd=4),("httpd",pid=3708,fd=4),("httpd",pid=3707,fd=4),("httpd",pid=3704,fd=4))
+tcp   LISTEN 0      128                *:8080            *:*    users:(("httpd",pid=3487,fd=4),("httpd",pid=3486,fd=4),("httpd",pid=3485,fd=4),("httpd",pid=3484,fd=4),("httpd",pid=3481,fd=4))
+[root@otus-home-work /]# 
+[root@otus-home-work /]#
+```
+____
