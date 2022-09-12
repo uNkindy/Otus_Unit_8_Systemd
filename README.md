@@ -46,4 +46,8 @@ ____
 ```
 ____
 
-#### 3. 
+#### 3. Дополнить юнит-файл apache httpd возможностью запустить несколько инстансов сервера с разными конфигами.
+* Внесем правки в инит файл[/usr/lib/systemd/system/httpd.service](https://github.com/uNkindy/Otus_Unit_8_Systemd/blob/main/httpd.service);
+* В файлах окружения [httpd-first](https://github.com/uNkindy/Otus_Unit_8_Systemd/blob/main/httpd-first), [httpd-second](https://github.com/uNkindy/Otus_Unit_8_Systemd/blob/main/httpd-second) задаем опции для запуска веб-сервера необходимыми конфигурационными файлами;
+* В директории с конфигурационными файлами httpd создаем два конфигурационных файла [first.conf](https://github.com/uNkindy/Otus_Unit_8_Systemd/blob/main/first.conf), [second.conf](https://github.com/uNkindy/Otus_Unit_8_Systemd/blob/main/second.conf);
+* 
