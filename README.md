@@ -17,4 +17,31 @@ ____
 * Установлен __spawn-fcgi__ и необходимые для него пакеты;
 * Расскоментируем строки в файле [/etc/sysconfig/spawn-fcgi](https://github.com/uNkindy/Otus_Unit_8_Systemd/blob/main/spawn-fcgi);
 * Создадим init файл в [/etc/systemd/system/spawn-fcgi.service](https://github.com/uNkindy/Otus_Unit_8_Systemd/blob/main/spawn-fcgi.service);
-* 
+* Убедимся, что сервис успешно работает:
+```console
+● spawn-fcgi.service - Spawn-fcgi startup service by Otus
+   Loaded: loaded (/etc/systemd/system/spawn-fcgi.service; disabled; vendor pre>
+   Active: active (running) since Mon 2022-09-12 10:19:45 UTC; 1h 55min ago
+ Main PID: 3157 (php-cgi)
+    Tasks: 33 (limit: 5952)
+   Memory: 18.8M
+   CGroup: /system.slice/spawn-fcgi.service
+           ├─3157 /usr/bin/php-cgi
+           ├─3158 /usr/bin/php-cgi
+           ├─3159 /usr/bin/php-cgi
+           ├─3160 /usr/bin/php-cgi
+           ├─3161 /usr/bin/php-cgi
+           ├─3162 /usr/bin/php-cgi
+           ├─3163 /usr/bin/php-cgi
+           ├─3164 /usr/bin/php-cgi
+           ├─3165 /usr/bin/php-cgi
+           ├─3166 /usr/bin/php-cgi
+           ├─3167 /usr/bin/php-cgi
+           ├─3168 /usr/bin/php-cgi
+           ├─3169 /usr/bin/php-cgi
+           ├─3170 /usr/bin/php-cgi
+           ├─3171 /usr/bin/php-cgi
+           ├─3172 /usr/bin/php-cgi
+
+```
+____
